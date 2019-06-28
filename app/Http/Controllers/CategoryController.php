@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -91,6 +92,11 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         $category->update($request->all());
+        
+        // Reset and setup cache
+        if (Cache::has('producthome')) {
+            Cache::pull('producthome');
+        }
 
         return redirect()->route('category.index')->with('message', 'success');
     }

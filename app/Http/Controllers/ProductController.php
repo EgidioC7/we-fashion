@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -166,6 +167,10 @@ class ProductController extends Controller
 
         $product->update($requestData);
 
+        // Reset and setup cache
+        if (Cache::has('producthome')) {
+            Cache::pull('producthome');
+        }
 
         return redirect()->route('product.index')->with('message', 'success');
     }
